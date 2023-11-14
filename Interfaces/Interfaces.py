@@ -39,8 +39,12 @@ class IWeatherRepository(ABC):
         """
         pass
 
+class IGeoLocationProvider(ABC):
+    @abstractmethod
+    def get_coordinates(self, city: str) -> tuple:
+        pass
 
 class IWeatherProvider(ABC):
     @abstractmethod
-    def get_current_weather(self, location: str) -> WeatherForecastModel:
+    def get_current_weather(self, lat: float, lon: float) -> WeatherForecastModel:
         pass

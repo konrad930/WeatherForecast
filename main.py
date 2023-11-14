@@ -4,8 +4,10 @@ from sqlalchemy.orm import sessionmaker
 from Services.WeatherService import WeatherService
 from Repostories.SQLAlchemy.WeatherRepositorySQLAlchemy import WeatherRepositorySQLAlchemy
 from WeatherProviders.OpenWeatherMapProvider import OpenWeatherMapProvider
+from WeatherProviders.OpenWeatherMapProvider_v2 import OpenWeatherMapProvider_v2
 from Repostories.SQLAlchemy.WeatherForecastORM import Base
 from Models.WeatherForecastModel import WeatherForecastModel
+from GeoLocationProviders.GoogleGeocoder import GoogleGeocoder
 
 def main():
     # Konfiguracja bazy danych
@@ -16,9 +18,11 @@ def main():
 
     # Tworzenie instancji repozytorium i dostawcy danych pogodowych
     weather_repo = WeatherRepositorySQLAlchemy(session)
-    weather_provider = OpenWeatherMapProvider(api_key="5e1ab9a3366d36c486baed1203b6f166")
+    weather_provider = OpenWeatherMapProvider_v2(api_key="5e1ab9a3366d36c486baed1203b6f166")
+    geolocation_provider = GoogleGeocoder(api_key="AIzaSyDG7RkvBdwrFVA6gOCKhgYLR65Zugi0PvI")
+
     # Tworzenie serwisu pogodowego
-    weather_service = WeatherService(weather_repo, weather_provider)
+    weather_service = WeatherService(weather_repo, weather_provider, geolocation_provider)
 
     # Pobieranie aktualnej pogody z API
     live_weather = weather_service.get_live_weather("Krakow")

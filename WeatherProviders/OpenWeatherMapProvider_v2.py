@@ -1,13 +1,15 @@
 # weather_providers.py
 import requests
+import pandas as pd
+import json
 from Interfaces.Interfaces import IWeatherProvider
 from Models.WeatherForecastModel import WeatherForecastModel
 
 
-class OpenWeatherMapProvider(IWeatherProvider):
+class OpenWeatherMapProvider_v2(IWeatherProvider):
     def __init__(self, api_key: str):
         self.api_key = api_key
-        self.weather_url = "http://api.openweathermap.org/data/2.5/weather"
+        self.weather_url = "https://api.openweathermap.org/data/3.0/onecall"
 
     def get_current_weather(self, lat: float, lon: float) -> WeatherForecastModel:
         params = {
@@ -17,12 +19,20 @@ class OpenWeatherMapProvider(IWeatherProvider):
             'units': 'metric'
         }
         response = requests.get(self.weather_url, params=params)
-        data = response.json()
+        json_data = response.json()
+
+        # Parse the JSON data
+        #arsed_data = json.loads(json_data)
+
+        # Create DataFrame
+        df = pd.DataFrame([json_data])
+
         if response.status_code == 200:
-            temperature = data['main']['temp']
-            forecast_description = data['weather'][0]['description']
-            return WeatherForecastModel(city=data['name'], temperature=temperature, forecast=forecast_description)
+            temperature = json_data['main']['temp']
+            forecast_description = json_data['weather'][0]['description']
+            return WeatherForecastModel(city=json_data['name'], temperature=temperature, forecast=forecast_description)
         else:
             raise Exception(f"Błąd podczas pobierania pogody na podstawie koordynatów")
+
 
 

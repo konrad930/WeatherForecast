@@ -4,10 +4,10 @@ from Interfaces.Interfaces import IWeatherProvider
 from Models.WeatherForecastModel import WeatherForecastModel
 
 
-class OpenWeatherMapProvider(IWeatherProvider):
+class TomorrowWeatherProvider(IWeatherProvider):
     def __init__(self, api_key: str):
         self.api_key = api_key
-        self.weather_url = "http://api.openweathermap.org/data/2.5/weather"
+        self.weather_url = "https://api.tomorrow.io/v4/weather/forecast"
 
     def get_current_weather(self, lat: float, lon: float) -> WeatherForecastModel:
         params = {
